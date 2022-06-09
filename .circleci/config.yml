@@ -10,12 +10,11 @@ jobs:
     executor: my-executor
     steps:
       - checkout
-      - run npm install 
+      - run: npm install 
       - save_cache:
           paths:
             - /src/node_modules
-          keys: 
-          - "npm-packages"
+          key: "npm-packages"
       - run: npm run lint
 
   test:
