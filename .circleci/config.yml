@@ -10,7 +10,7 @@ jobs:
     executor: my-executor
     steps:
       - checkout
-      - run: npm install 
+      - run: npm i 
       - save_cache:
           paths:
             - /src/node_modules
@@ -24,15 +24,13 @@ jobs:
       - restore_cache:
           keys: 
           -  "npm-packages"
-      - run: npm install 
+      - run: npm i 
       - run: npm run test 
   
   analyze:
     executor: my-executor
     steps:
       - checkout
-      - restore_cache:
-          key:  "npm-packages"
       - run: npm audit  
 
 workflows:
