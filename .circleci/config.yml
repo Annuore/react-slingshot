@@ -1,0 +1,48 @@
+version: 2.1
+
+executors:
+  my-executor:
+    docker:
+      - image: cimg/node:18.3.0
+    
+jobs:
+  build:
+    executor: my-executor
+    steps:
+      - checkout
+      - run npm install 
+      - save_cache:
+          paths:
+            - /src/node_modules
+          keys: 
+          - "npm-packages"
+      - run: npm run lint
+
+  test:
+    executor: my-executor
+    steps:
+      - checkout
+      - restore_cache:
+          keys: 
+          -  "npm-packages"
+      - run: npm install 
+      - run: npm run test 
+  
+  analyze:
+    executor: my-executor
+    steps:
+      - checkout
+      - restore_cache:
+          key:  "npm-packages"
+      - run: npm audit  
+
+workflows:
+  btd:
+    jobs:
+      - build 
+      - test:
+          requires:
+            - build 
+      - analyze: 
+          requires:
+            - test
